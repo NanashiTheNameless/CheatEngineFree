@@ -23,14 +23,14 @@ Conceptually inspired by <https://github.com/happymimimix/CheatEnginePatreonHack
 
 - `setup_tool.py` - idempotent bootstrap: clones/pulls https://github.com/NanashiTheNameless/CheatEngineFree into `~/CheatEngineFree` and prints next steps.
 - `run.py` - main helper to update Cheat Engine settings and to launch Cheat Engine with network blocked.
-- Linux blocking: requires `firejail` (strict requirement). The launcher and `run.py --launch-ce` will refuse to run without `firejail`.
+- Linux blocking: uses `nft` (preferred) or `iptables` per-UID rules (requires root). The launcher will prompt for elevation via `pkexec` (polkit) when available, fall back to `sudo` if not.
 - macOS: the script will warn about LuLu/Little Snitch; manual setup recommended.
 
 
 ## **Prerequisites**
 
 - Python 3 (for `run.py` / `setup_tool.py`)
-- Linux: `firejail` (install via your distro package manager)
+-- Linux: `nft` (nftables) or `iptables` available; `pkexec` or `sudo` required to install per-UID rules
 - Windows: PowerShell (the repo includes a firewall helper under `tools/windows`)
 - macOS: LuLu or Little Snitch recommended for per-process blocking
 
@@ -68,4 +68,4 @@ python3 run.py --create-desktop /path/to/CheatEngine --name "Cheat Engine Offlin
 Notes & safety
 
 - `run.py` writes `CEPatreon`/`cesession` and `lastcheck` values into the expected Cheat Engine settings. When `reg.xml` exists it is backed up in-place to `reg.xml.bak`.
-- The repo intentionally requires `firejail` on Linux to ensure per-process network blocking; the launcher will not run without it.
+The launcher prefers kernel-level per-UID filtering (`nft`/`iptables`) and will request elevation via `pkexec` or `sudo` when necessary. It does not create new namespaces or apply additional process/memory isolation.

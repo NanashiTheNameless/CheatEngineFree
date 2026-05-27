@@ -22,7 +22,7 @@ def create_desktop_entry(ce_path: str, name: str = None, icon: str = None):
     if name is None:
         name = 'Cheat Engine Offline'
 
-    launcher = Path(__file__).parent / 'tools' / 'linux' / 'firejail_launcher.sh'
+    launcher = Path(__file__).parent / 'tools' / 'linux' / 'ce_launcher.sh'
     exec_cmd = f'{launcher} "{ce_path}" %U'
 
     if icon is None:
@@ -303,9 +303,7 @@ Options:
     system = platform.system().lower()
 
     if system == 'linux':
-        if shutil.which('firejail') is None:
-            print('firejail is required on Linux to enforce per-process network blocking. Install it and retry.', file=sys.stderr)
-            sys.exit(1)
+        pass
     elif system == 'darwin':
         if not shutil.which('luluctl'):
             print('Note: macOS network blocking requires LuLu or Little Snitch. Install LuLu (luluctl) or configure Little Snitch to block Cheat Engine.', file=sys.stderr)
@@ -326,7 +324,7 @@ Options:
             extra_args = []
 
         if system == 'linux':
-            launcher = Path(__file__).parent / 'tools' / 'linux' / 'firejail_launcher.sh'
+            launcher = Path(__file__).parent / 'tools' / 'linux' / 'ce_launcher.sh'
             cmd = [str(launcher), ce_path] + extra_args
             print(f"Launching Cheat Engine with blocker: {' '.join(cmd)}")
             os.execv(str(launcher), cmd)

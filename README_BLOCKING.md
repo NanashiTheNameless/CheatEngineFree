@@ -1,10 +1,10 @@
 Per-process network blocking helpers for Cheat Engine
 
 Linux
-- Preferred: `firejail --net=none /path/to/cheatengine` (no network for the process).
+- Preferred: per-UID kernel filtering via `nft` (nftables) or `iptables`.
 
 Scripts
-- `tools/linux/firejail_launcher.sh /path/to/cheatengine [args...]` -- launches Cheat Engine under `firejail --net=none`. The launcher will exit with an error if `firejail` is not installed.
+- `tools/linux/ce_launcher.sh /path/to/cheatengine [args...]` -- launches Cheat Engine and temporarily installs a per-UID `nft`/`iptables` rule to drop outbound traffic for the process's UID. The launcher will prompt for elevation via `pkexec` or `sudo` when required.
 
 Windows
 - `tools/windows/block_cheatengine.ps1 -Action add -ExePath 'C:\Path\cheatengine.exe'` adds a firewall rule to block outbound traffic for the executable (requires admin).
